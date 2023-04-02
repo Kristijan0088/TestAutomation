@@ -61,10 +61,8 @@ public class MyStepdefs {
     private void sendKEys(String emailAdress, String userName, String PassWord) {
         int randomNumber = randomNumb.nextInt(1000) + 1;
         String email = "@hejhej.com";
-        String emailLong = "";
-        for (int i = 0; i < 150; i++) {
-            emailLong += "KLMNOPQRSTUVWXYZabcdefghijklmno";
-        }
+        String emailLong = "asdacacacacKLMNOPQRSTUVWXYZabcdefghijklmnoasacascascascacascascacacacacaacascsacascascsacac";
+
 
         if (emailAdress == null || emailAdress.isEmpty()) {
 
@@ -78,7 +76,7 @@ public class MyStepdefs {
             driver.findElement(By.id("new_username")).click();
             driver.findElement(By.id("new_username")).clear();
 
-            driver.findElement(By.id("new_username")).sendKeys(userName + randomAbc);
+            driver.findElement(By.id("new_username")).sendKeys(userName + emailLong);
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("new_password")));
             driver.findElement(By.id("new_password")).sendKeys(PassWord + randomNumber);

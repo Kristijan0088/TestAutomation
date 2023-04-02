@@ -1,6 +1,6 @@
 Feature: Sign up for Mailchimp test
 
-  Scenario Outline: Mailchimp generale test
+  Scenario Outline: Mailchimp SignUp page test
     Given I have chosen a "<Browser>"
     When I have entered a valid "<Email-adress>", "<Username>" and "<Password>"
     And I press SignUp button
