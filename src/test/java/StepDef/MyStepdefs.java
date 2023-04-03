@@ -63,6 +63,7 @@ public class MyStepdefs {
         String email = "@hejhej.com";
         String emailLong = "asdacacacacKLMNOPQRSTUVWXYZabcdefghijklmnoasacascascascacascascacacacacaacascsacascascsacac";
 
+        WebDriverWait wait = new WebDriverWait(driver, 10); // initialize the explicit wait with a timeout of 10 seconds
 
         if (emailAdress == null || emailAdress.isEmpty()) {
 
