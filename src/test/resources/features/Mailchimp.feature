@@ -10,7 +10,7 @@ Feature: Sign up for Mailchimp test
 
     Examples:
       | Browser | Email-adress  | Username      | Password     | Registered  |
-      | Chrome  | Master        | Dark#Horse*   | Maven99*     | Yes         |
+      | Chrome  | RockyRider    | Dark#Horse*   | Maven99*     | Yes         |
       | Edge    | ChrisMaster   | Lord*OfNight% | Rick34?#     | Yes         |
       | Chrome  |               | Mister*#      | Mister34*%   | MissingE    |
       | Edge    |               | YaleGrave19   | Thomas99#    | MissingE    |

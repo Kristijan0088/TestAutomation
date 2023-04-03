@@ -45,8 +45,8 @@ public class MyStepdefs {
         driver.get("https://login.mailchimp.com/signup/");
         driver.manage().window().maximize();
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("onetrust-close-btn-container")));
-        driver.findElement(By.id("onetrust-close-btn-container")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("onetrust-accept-btn-handler")));
+        driver.findElement(By.id("onetrust-accept-btn-handler")).click();
 
         //driver.findElement(By.xpath("//*[@id=\"onetrust-accept-btn-handler\"]")).click();
     }
