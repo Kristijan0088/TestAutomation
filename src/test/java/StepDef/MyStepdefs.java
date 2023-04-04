@@ -53,12 +53,13 @@ public class MyStepdefs {
 
     @When("I have entered a valid {string}, {string} and {string}")
     public void iEnterAValidAnd(String emailAdress, String userName, String PassWord) {
-        sendKEys(emailAdress, userName, PassWord);
+        //sendKeys(emailAdress, userName, PassWord);
+        sendKeys(By.id("email"), By.id("new_username"), By.id("new_password"), emailAdress, userName, PassWord);
 
 
     }
 
-    private void sendKEys(String emailAdress, String userName, String PassWord) {
+    private void sendKeys(By emailBy, By userNameBy, By passwordBy, String emailAdress, String userName, String PassWord) {
         int randomNumber = randomNumb.nextInt(1000) + 1;
         String email = "@hejhej.com";
         String emailLong = "asdacacacacKLMNOPQRSTUVWXYZabcdefghijklmnoasacascascascacascascacacacacaacascsacascascsacac";
@@ -66,35 +67,37 @@ public class MyStepdefs {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // initialize the explicit wait with a timeout of 10 seconds
 
         if (emailAdress == null || emailAdress.isEmpty()) {
-
-            driver.findElement(By.id("new_username")).sendKeys(userName + randomNumber);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("new_password")));
-            driver.findElement(By.id("new_password")).sendKeys(PassWord + randomNumber);
+            //Om mail fältet lämnas tomt
+            driver.findElement(userNameBy).sendKeys(userName + randomNumber);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(passwordBy));
+            driver.findElement(passwordBy).sendKeys(PassWord + randomNumber);
         } else if (userName.equalsIgnoreCase("LongUserName")) {
+            //Användarnamn längre den 100 tecken
+            driver.findElement(emailBy).sendKeys(emailAdress + email);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(userNameBy));
+            driver.findElement(userNameBy).click();
+            driver.findElement(userNameBy).clear();
 
-            driver.findElement(By.id("email")).sendKeys(emailAdress + email);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("new_username")));
-            driver.findElement(By.id("new_username")).click();
-            driver.findElement(By.id("new_username")).clear();
+            driver.findElement(userNameBy).sendKeys(userName + emailLong);
 
-            driver.findElement(By.id("new_username")).sendKeys(userName + emailLong);
-
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("new_password")));
-            driver.findElement(By.id("new_password")).sendKeys(PassWord + randomNumber);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(passwordBy));
+            driver.findElement(passwordBy).sendKeys(PassWord + randomNumber);
 
         } else if (emailAdress.equalsIgnoreCase("havenAbove")) {
-
-            driver.findElement(By.id("email")).sendKeys(emailAdress + email);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("new_password")));
-            driver.findElement(By.id("new_password")).sendKeys(PassWord);
+            //Användarnamn redan upptagen
+            driver.findElement(emailBy).sendKeys(emailAdress + email);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(passwordBy));
+            driver.findElement(passwordBy).sendKeys(PassWord);
 
         } else if (PassWord == null || PassWord.isEmpty()) {
-            driver.findElement(By.id("email")).sendKeys(emailAdress + email);
+            //Lösenord fältet lämnas tomt
+            driver.findElement(emailBy).sendKeys(emailAdress + email);
 
         } else {
-            driver.findElement(By.id("email")).sendKeys(emailAdress + randomNumber + email);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("new_password")));
-            driver.findElement(By.id("new_password")).sendKeys(PassWord + randomNumber);
+            //Skapa en ny användare
+            driver.findElement(emailBy).sendKeys(emailAdress + randomNumber + email);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(passwordBy));
+            driver.findElement(passwordBy).sendKeys(PassWord + randomNumber);
 
         }
 
@@ -115,35 +118,64 @@ public class MyStepdefs {
         button.click();
     }
 
-    @Then("I should be {string} or not registered")
-    public void iShouldBeOrNotRegistered(String Verify) {
+    @Then("I should know my {string}")
+    public void verifyRegistrationStatus(String Verify) {
+        // If,else-if och else kan ersättas med case senare
 
-        if (Verify.equalsIgnoreCase("yes")) {
+        if (Verify.equalsIgnoreCase("AccountCreated")) {
             //*[@id="signup-content"]/div/div[1]/section/div/h1 gammal xpath frön förra veckan
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-success\"]/div/div[1]/section/div/h1")));
-            assertEquals("Check your email", driver.findElement(By.xpath("//*[@id=\"signup-success\"]/div/div[1]/section/div/h1")).getText());
 
-        } else if (Verify.equalsIgnoreCase("missingE")) {
+            waitForVisibility(By.xpath("//*[@id=\"signup-success\"]/div/div[1]/section/div/h1"));
+            assertEquals("Check your email", getText(By.xpath("//*[@id=\"signup-success\"]/div/div[1]/section/div/h1")));
+
+            //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-success\"]/div/div[1]/section/div/h1")));
+            //assertEquals("Check your email", driver.findElement(By.xpath("//*[@id=\"signup-success\"]/div/div[1]/section/div/h1")).getText());
+
+        } else if (Verify.equalsIgnoreCase("missingEmail")) {
             System.out.println("Email-adress not provided!");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[1]/div/span")));
-            assertEquals("An email address must contain a single @.", driver.findElement(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[1]/div/span")).getText());
+            waitForVisibility(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[1]/div/span"));
+            assertEquals("An email address must contain a single @.", getText(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[1]/div/span")));
+
+            //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[1]/div/span")));
+            //assertEquals("An email address must contain a single @.", driver.findElement(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[1]/div/span")).getText());
         } else if (Verify.equalsIgnoreCase("MissingPass")) {
             System.out.println("Missing password");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"passwordHint\"]/div/div/ul/li[5]/span")));
-            assertEquals("8 characters minimum", driver.findElement(By.xpath("//*[@id=\"passwordHint\"]/div/div/ul/li[5]/span")).getText());
+            waitForVisibility(By.xpath("//*[@id=\"passwordHint\"]/div/div/ul/li[5]/span"));
+            assertEquals("8 characters minimum", getText(By.xpath("//*[@id=\"passwordHint\"]/div/div/ul/li[5]/span")));
+
+            //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"passwordHint\"]/div/div/ul/li[5]/span")));
+            //assertEquals("8 characters minimum", driver.findElement(By.xpath("//*[@id=\"passwordHint\"]/div/div/ul/li[5]/span")).getText());
         } else if (Verify.equalsIgnoreCase("LongUn")) {
             System.out.println("Long user 100 characters");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")));
-            assertEquals("Enter a value less than 100 characters long", driver.findElement(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")).getText());
+            waitForVisibility(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span"));
+            assertEquals("Enter a value less than 100 characters long", getText(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")));
+
+            //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")));
+            //assertEquals("Enter a value less than 100 characters long", driver.findElement(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")).getText());
         } else if (Verify.equalsIgnoreCase("Occupied")) {
             System.out.println("User already occupied");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")));
-            assertEquals("Great minds think alike - someone already has this username." + " If it's you, log in.", driver.findElement(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")).getText());
+            waitForVisibility(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span"));
+            assertEquals("Great minds think alike - someone already has this username. If it's you, log in.", getText(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")));
+
+            //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")));
+            //assertEquals("Great minds think alike - someone already has this username." + " If it's you, log in.", driver.findElement(By.xpath("//*[@id=\"signup-form\"]/fieldset/div[2]/div/span")).getText());
         } else {
             System.out.println("Work in progress...");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div/h1")));
-            assertEquals("We've run into an issue", driver.findElement(By.xpath("/html/body/div[2]/div/h1")).getText());
+            waitForVisibility(By.xpath("/html/body/div[2]/div/h1"));
+            assertEquals("We've run into an issue", getText(By.xpath("/html/body/div[2]/div/h1")));
+
+            //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div/h1")));
+            //assertEquals("We've run into an issue", driver.findElement(By.xpath("/html/body/div[2]/div/h1")).getText());
         }
+    }
+
+    private void waitForVisibility(By locator) {
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    private String getText(By locator){
+        return driver.findElement(locator).getText();
     }
     @After
     public void tearDown() {
