@@ -63,7 +63,7 @@ public class MyStepdefs {
         String email = "@hejhej.com";
         String emailLong = "asdacacacacKLMNOPQRSTUVWXYZabcdefghijklmnoasacascascascacascascacacacacaacascsacascascsacac";
 
-        WebDriverWait wait = new WebDriverWait(driver, 10); // initialize the explicit wait with a timeout of 10 seconds
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // initialize the explicit wait with a timeout of 10 seconds
 
         if (emailAdress == null || emailAdress.isEmpty()) {
 
@@ -119,7 +119,7 @@ public class MyStepdefs {
     public void iShouldBeOrNotRegistered(String Verify) {
 
         if (Verify.equalsIgnoreCase("yes")) {
-            //*[@id="signup-content"]/div/div[1]/section/div/h1 gammal xpath frö förra veckan
+            //*[@id="signup-content"]/div/div[1]/section/div/h1 gammal xpath frön förra veckan
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"signup-success\"]/div/div[1]/section/div/h1")));
             assertEquals("Check your email", driver.findElement(By.xpath("//*[@id=\"signup-success\"]/div/div[1]/section/div/h1")).getText());
 
